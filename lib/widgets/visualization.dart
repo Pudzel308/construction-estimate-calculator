@@ -191,9 +191,9 @@ class IsometricBoxPainter extends CustomPainter {
 
     _drawLengthDimension(
       canvas,
-      p4,
       p5,
-      offset: 35,
+      p6,
+      offset: 55,
       label: '${_formatNumber(l)} m (L)',
     );
 
@@ -229,8 +229,8 @@ class IsometricBoxPainter extends CustomPainter {
       ..color = Colors.black
       ..strokeWidth = 1;
 
-    final dimensionStart = start + Offset(0, offset);
-    final dimensionEnd = end + Offset(0, offset);
+    final dimensionStart = start + Offset(offset, 0);
+    final dimensionEnd = end + Offset(offset, 0);
 
     // Extension lines.
     canvas.drawLine(start, dimensionStart, paint);
@@ -260,10 +260,7 @@ class IsometricBoxPainter extends CustomPainter {
     _drawLabel(
       canvas,
       label,
-      Offset(
-        (dimensionStart.dx + dimensionEnd.dx) / 2,
-        dimensionStart.dy + 12,
-      ),
+      dimensionStart + Offset(30, 0),
     );
   }
 

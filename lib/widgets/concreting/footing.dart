@@ -2,7 +2,7 @@ import 'package:construct/widgets/visualization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class Footing extends StatelessWidget {
+class Footing extends StatefulWidget {
     final ValueChanged<double> onLengthChanged;
     final ValueChanged<double> onWidthChanged;
     final ValueChanged<double> onThicknessChanged;
@@ -15,8 +15,27 @@ class Footing extends StatelessWidget {
     final double vol;
     final double nvol;
 
+    const Footing({
+        super.key,
+        required this.onLengthChanged,
+        required this.onWidthChanged,
+        required this.onThicknessChanged,
+        required this.onNumberChanged,
+        required this.length,
+        required this.width,
+        required this.thickness,
+        required this.number,
+        required this.vol,
+        required this.nvol,
+    });
+
+    @override
+    State<Footing> createState() => _FootingState();
+}
+
+class _FootingState extends State<Footing> {
     double get volume {
-        return (length * width * thickness) * number;
+        return (widget.length * widget.width * widget.thickness) * widget.number;
     }
     double roundUp1(double value) {
         return (value * 10).ceil() / 10;
@@ -33,20 +52,6 @@ class Footing extends StatelessWidget {
         return roundUp1(volume * 1);
     }
 
-    const Footing({
-        super.key,
-        required this.onLengthChanged,
-        required this.onWidthChanged,
-        required this.onThicknessChanged,
-        required this.onNumberChanged,
-        required this.length,
-        required this.width,
-        required this.thickness,
-        required this.number,
-        required this.vol,
-        required this.nvol,
-    });
-
     final double text_Width = 100;
 
     @override
@@ -58,7 +63,7 @@ class Footing extends StatelessWidget {
 
         return Column(
             children: [
-                IsometricBox(length: length, width: width, thickness: thickness),
+                IsometricBox(length: widget.length, width: widget.width, thickness: widget.thickness),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -115,7 +120,7 @@ class Footing extends StatelessWidget {
                                                     FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
                                                 ],
                                                 onChanged: (value) {
-                                                    onLengthChanged(
+                                                    widget.onLengthChanged(
                                                         double.tryParse(value) ?? 0,
                                                     );
                                                 },
@@ -141,7 +146,7 @@ class Footing extends StatelessWidget {
                                                     FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
                                                 ],
                                                 onChanged: (value) {
-                                                    onWidthChanged(
+                                                    widget.onWidthChanged(
                                                         double.tryParse(value) ?? 0,
                                                     );
                                                 },
@@ -167,7 +172,7 @@ class Footing extends StatelessWidget {
                                                     FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
                                                 ],
                                                 onChanged: (value) {
-                                                    onThicknessChanged(
+                                                    widget.onThicknessChanged(
                                                         double.tryParse(value) ?? 0,
                                                     );
                                                 },
@@ -199,7 +204,7 @@ class Footing extends StatelessWidget {
                                     "TOTAL VOLUME OF CONCRETE:",
                                     style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                Text(vol.toStringAsFixed(2), style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
+                                Text(widget.vol.toStringAsFixed(2), style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
                                 Text(
                                     "CU.M",
                                     style: TextStyle(fontWeight: FontWeight.bold),
@@ -226,8 +231,9 @@ class Footing extends StatelessWidget {
                                                 inputFormatters: [
                                                     FilteringTextInputFormatter.digitsOnly,
                                                 ],
+                                                onSubmitted: (_) {fNum.unfocus();},
                                                 onChanged: (value) {
-                                                    onNumberChanged(
+                                                    widget.onNumberChanged(
                                                         double.tryParse(value) ?? 0,
                                                     );
                                                 },
@@ -257,7 +263,7 @@ class Footing extends StatelessWidget {
                                     "TOTAL VOLUME OF CONCRETE:",
                                     style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                Text(nvol.toStringAsFixed(2), style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
+                                Text(widget.nvol.toStringAsFixed(2), style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
                                 Text(
                                     "CU.M",
                                     style: TextStyle(fontWeight: FontWeight.bold),
