@@ -51,7 +51,7 @@ class FloorSlabArea extends StatelessWidget {
                                         SizedBox(height: 10),
                                         SizedBox(height: 40, child: Center(child: Text("Thickness: "))),
                                         SizedBox(height: 10),
-                                        SizedBox(height: 40, child: Center(child: Text("Concrete Mix Design (CLASS): "))),
+                                        SizedBox(height: 40, child: Center(child: Text("Concrete(CLASS)"))),
                                     ]),
                                 Column(
                                     children: [

@@ -16,6 +16,7 @@ class Concrete extends StatefulWidget{
 
 class _ConcreteState extends State<Concrete> {
     int selected = 0;
+    int unit = 0;
 
     Widget getPanel() {
         switch (selected) {
@@ -40,6 +41,7 @@ class _ConcreteState extends State<Concrete> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                     FloatingActionButton(
+                        heroTag: null,
                         onPressed: () {
                             showDialog(
                                 context: context, 
@@ -56,7 +58,114 @@ class _ConcreteState extends State<Concrete> {
                         child: const Icon(Icons.calculate),
                     ),
                     SizedBox(width: 20,),
-                    FloatingActionButton(onPressed: () {}, child: Icon(Icons.percent),)
+                    FloatingActionButton(
+                        heroTag: null,
+                        onPressed: () {
+                            showDialog(
+                                context: context, 
+                                builder: (context) {
+                                    return Dialog(
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                        backgroundColor: Colors.white,
+                                        child: Padding(
+                                            padding: const EdgeInsets.all(32),
+                                            child: SizedBox(
+                                                height: 300,
+                                                child: Column(
+                                                    children: [
+                                                        Text(
+                                                            "Unit Converter",
+                                                            style: TextStyle(fontWeight:FontWeight.bold),
+                                                        ),
+                                                        SizedBox(height: 30),
+                                                        Divider(),
+                                                        SizedBox(width: 30,),
+                                                        SizedBox(
+                                                            height: 50,
+                                                            width: 200,
+                                                            child: DropdownButtonFormField<int>(
+                                                            initialValue: selected,
+                                                            decoration: InputDecoration(
+                                                                border: OutlineInputBorder(
+                                                                    borderRadius: BorderRadius.circular(4),
+                                                                ),
+                                                                filled: true,
+                                                                fillColor: Colors.white,
+                                                            ),
+                                                            items: [
+                                                                DropdownMenuItem(
+                                                                    value: 0,
+                                                                    child: Text("Length")
+                                                                ),
+                                                                DropdownMenuItem(
+                                                                    value: 1,
+                                                                    child: Text("Area")
+                                                                ),
+                                                                DropdownMenuItem(
+                                                                    value: 2,
+                                                                    child: Text("Volume")
+                                                                ),
+                                                                DropdownMenuItem(
+                                                                    value: 3,
+                                                                    child: Text("Mass")
+                                                                ),
+                                                            ], 
+                                                            onChanged: (value) {
+                                                                setState(() {
+                                                                    unit = value!;
+                                                                });
+                                                            }
+                                                        ),
+                                                        ),
+                                                        SizedBox(height: 50,),
+                                                        Container(
+                                                            height: 40,
+                                                            padding: const EdgeInsets.all(6),
+                                                            margin: const EdgeInsets.only(bottom: 10),
+                                                            decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Colors.brown,
+                                                                    width: 1,
+                                                                ),
+                                                                borderRadius: BorderRadius.circular(6),
+                                                            ),
+                                                            child: Row(
+                                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                children: [
+                                                                    Text("From:"),
+                                                                    SizedBox(width: 100,child: TextField()),
+                                                                    Text("Meters")
+                                                                ])
+                                                        ),
+                                                        SizedBox(height: 20,),
+                                                        Container(
+                                                            height: 40,
+                                                            padding: const EdgeInsets.all(6),
+                                                            margin: const EdgeInsets.only(bottom: 10),
+                                                            decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Colors.brown,
+                                                                    width: 1,
+                                                                ),
+                                                                borderRadius: BorderRadius.circular(6),
+                                                            ),
+                                                            child: Row(
+                                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                children: [
+                                                                    Text("To:"),
+                                                                    SizedBox(width: 100,child: TextField()),
+                                                                    Text("Feet")
+                                                                ])
+                                                        ),
+                                                    ]
+                                                ),
+                                            )
+                                        ),
+                                    );
+                                }
+                            );
+                        }, 
+                        child: Icon(Icons.percent),)
                 ]),
             appBar: AppBar(
                 toolbarHeight: 90,
