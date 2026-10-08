@@ -34,6 +34,11 @@ class Footing extends StatefulWidget {
 }
 
 class _FootingState extends State<Footing> {
+    final fLen = FocusNode();
+    final fWid = FocusNode();
+    final fThic = FocusNode();
+    final fNum = FocusNode();
+
     double get volume {
         return (widget.length * widget.width * widget.thickness) * widget.number;
     }
@@ -56,11 +61,6 @@ class _FootingState extends State<Footing> {
 
     @override
     Widget build(BuildContext context) {
-        final fLen = FocusNode();
-        final fWid = FocusNode();
-        final fThic = FocusNode();
-        final fNum = FocusNode();
-
         return Column(
             children: [
                 IsometricBox(length: widget.length, width: widget.width, thickness: widget.thickness),
@@ -120,7 +120,7 @@ class _FootingState extends State<Footing> {
                                                     FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
                                                 ],
                                                 onChanged: (value) {
-                                                    widget.onLengthChanged(
+                                                    widget.onWidthChanged(
                                                         double.tryParse(value) ?? 0,
                                                     );
                                                 },
@@ -146,7 +146,7 @@ class _FootingState extends State<Footing> {
                                                     FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
                                                 ],
                                                 onChanged: (value) {
-                                                    widget.onWidthChanged(
+                                                    widget.onLengthChanged(
                                                         double.tryParse(value) ?? 0,
                                                     );
                                                 },
@@ -240,7 +240,7 @@ class _FootingState extends State<Footing> {
                                                 decoration: const InputDecoration(
                                                     contentPadding: EdgeInsets.zero,
                                                     border: OutlineInputBorder(),
-                                                    hintText: 'amount',
+                                                    hintText: 'number',
                                                     hintStyle: TextStyle(color: Colors.grey)
 
                                                 ),
