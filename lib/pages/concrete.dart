@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_calculator/in_app_calculator.dart';
 import 'package:units_converter/units_converter.dart';
+import 'package:construct/widgets/visualization.dart';
+import 'dart:math' as math;
 
 class Concrete extends StatefulWidget{
     const Concrete({super.key});
@@ -18,10 +20,61 @@ class _ConcreteState extends State<Concrete> {
     int selected = 0;
     int unit = 0;
 
+    double length = 100;
+    double width = 100;
+    double thickness = 10;
+    double number = 1;
+
+    double get volume {
+        return (length * width * thickness) * number;
+    }
+    double roundUp1(double value) {
+        return (value * 10).ceil() / 10;
+    }
+    double get cementBags {
+        return ( volume * 9 ).ceilToDouble();
+    }
+
+    double get volSand {
+        return roundUp1(volume * 0.5);
+    }
+
+    double get volGravel {
+        return roundUp1(volume * 1);
+    }
+
     Widget getPanel() {
         switch (selected) {
             case 0:
-                return const Footing();
+                final double vol = length * width * thickness;
+                final double nvol = vol * number;
+                return Footing(
+                    length: length,
+                    width: width,
+                    thickness: thickness,
+                    vol: vol,
+                    nvol: nvol,
+                    onLengthChanged: (value) {
+                        setState(() {
+                            length = value;
+                        });
+                    },
+                    onWidthChanged: (value) {
+                        setState(() {
+                            width = value;
+                        });
+                    },
+                    onThicknessChanged: (value) {
+                        setState(() {
+                            thickness = value;
+                        });
+                    },
+                    onNumberChanged: (value) {
+                        setState(() {
+                            number = value;
+                        });
+                    },
+                );
             case 1:
                 return const WallFooting();
             case 2:
@@ -29,7 +82,7 @@ class _ConcreteState extends State<Concrete> {
             case 3:
                 return const FloorSlabArea();
             default:
-                return const SizedBox();
+                return const SizedBox(height: 80, child: Column(children: [SizedBox(height: 30), Text("There's nothing here.")]));
         }
 
     }
@@ -84,7 +137,7 @@ class _ConcreteState extends State<Concrete> {
                                                             height: 50,
                                                             width: 200,
                                                             child: DropdownButtonFormField<int>(
-                                                            initialValue: selected,
+                                                            initialValue: unit,
                                                             decoration: InputDecoration(
                                                                 border: OutlineInputBorder(
                                                                     borderRadius: BorderRadius.circular(4),
@@ -229,6 +282,7 @@ class _ConcreteState extends State<Concrete> {
                 ],),
             body: SingleChildScrollView(
                 child: Column(children: [
+                    IsometricBox(length: length, width: width, thickness: thickness),
                     getPanel(),
                     Container(
                         margin: const EdgeInsets.only(left: 10, right: 10),
@@ -263,14 +317,17 @@ class _ConcreteState extends State<Concrete> {
                                 child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
-                                        Text(
-                                            "NO. OF CEMENT:",
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
+                                        SizedBox(
+                                            width: 200,
+                                            child: 
+                                            Text(
+                                                "NO. OF CEMENT:",
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                ),
                                             ),
                                         ),
-                                        Text("BAGS"),
-                                        Text("0.0"),
+                                        Text(cementBags.toString(), style: TextStyle(fontWeight: FontWeight.bold)),
                                         Text("BAGS"),
                                     ]
                                 )
@@ -289,14 +346,17 @@ class _ConcreteState extends State<Concrete> {
                                 child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
-                                        Text(
-                                            "VOL. OF SAND:",
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
+                                        SizedBox(
+                                            width: 200,
+                                            child: 
+                                            Text(
+                                                "VOL. OF SAND:",
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                ),
                                             ),
                                         ),
-                                        Text("CU.M"),
-                                        Text("0.0"),
+                                        Text(volSand.toString(), style: TextStyle(fontWeight: FontWeight.bold)),
                                         Text("CU.M"),
                                     ]
                                 )
@@ -315,14 +375,17 @@ class _ConcreteState extends State<Concrete> {
                                 child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
-                                        Text(
-                                            "VOL. OF 3/4\" GRAVEL:",
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
+                                        SizedBox(
+                                            width: 200,
+                                            child: 
+                                            Text(
+                                                "VOL. OF 3/4\" GRAVEL:",
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                ),
                                             ),
                                         ),
-                                        Text("CU.M"),
-                                        Text("0.0"),
+                                        Text(volGravel.toString(), style: TextStyle(fontWeight: FontWeight.bold)),
                                         Text("CU.M"),
                                     ]
                                 )

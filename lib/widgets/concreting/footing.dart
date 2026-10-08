@@ -1,7 +1,29 @@
 import 'package:flutter/material.dart';
 
 class Footing extends StatelessWidget {
-    const Footing({super.key});
+    final ValueChanged<double> onLengthChanged;
+    final ValueChanged<double> onWidthChanged;
+    final ValueChanged<double> onThicknessChanged;
+    final ValueChanged<double> onNumberChanged;
+
+    final double length;
+    final double width;
+    final double thickness;
+    final double vol;
+    final double nvol;
+
+    const Footing({
+        super.key,
+        required this.onLengthChanged,
+        required this.onWidthChanged,
+        required this.onThicknessChanged,
+        required this.onNumberChanged,
+        required this.length,
+        required this.width,
+        required this.thickness,
+        required this.vol,
+        required this.nvol,
+    });
 
     final double text_Width = 100;
 
@@ -9,7 +31,6 @@ class Footing extends StatelessWidget {
     Widget build(BuildContext context) {
         return Column(
             children: [
-                Divider(),
                 SizedBox(height: 30,),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -69,6 +90,11 @@ class Footing extends StatelessWidget {
                                             child: TextField(
                                                 textAlign: TextAlign.center, 
                                                 textAlignVertical: TextAlignVertical.center,
+                                                onChanged: (value) {
+                                                    onLengthChanged(
+                                                        double.tryParse(value) ?? 0,
+                                                    );
+                                                },
                                                 decoration: const InputDecoration(
                                                     contentPadding: EdgeInsets.zero,
                                                     border: OutlineInputBorder()
@@ -82,6 +108,11 @@ class Footing extends StatelessWidget {
                                             child: TextField(
                                                 textAlign: TextAlign.center, 
                                                 textAlignVertical: TextAlignVertical.center,
+                                                onChanged: (value) {
+                                                    onWidthChanged(
+                                                        double.tryParse(value) ?? 0,
+                                                    );
+                                                },
                                                 decoration: const InputDecoration(
                                                     contentPadding: EdgeInsets.zero,
                                                     border: OutlineInputBorder()
@@ -95,6 +126,11 @@ class Footing extends StatelessWidget {
                                             child: TextField(
                                                 textAlign: TextAlign.center, 
                                                 textAlignVertical: TextAlignVertical.center,
+                                                onChanged: (value) {
+                                                    onThicknessChanged(
+                                                        double.tryParse(value) ?? 0,
+                                                    );
+                                                },
                                                 decoration: const InputDecoration(
                                                     contentPadding: EdgeInsets.zero,
                                                     border: OutlineInputBorder()
@@ -120,7 +156,7 @@ class Footing extends StatelessWidget {
                                     "TOTAL VOLUME OF CONCRETE:",
                                     style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                Text("0.0"),
+                                Text(vol.toStringAsFixed(2)),
                                 Text(
                                     "CU.M",
                                     style: TextStyle(fontWeight: FontWeight.bold),
@@ -146,6 +182,11 @@ class Footing extends StatelessWidget {
                                             child: TextField(
                                                 textAlign: TextAlign.center, 
                                                 textAlignVertical: TextAlignVertical.center,
+                                                onChanged: (value) {
+                                                    onNumberChanged(
+                                                        double.tryParse(value) ?? 0,
+                                                    );
+                                                },
                                                 decoration: const InputDecoration(
                                                     contentPadding: EdgeInsets.zero,
                                                     border: OutlineInputBorder()
@@ -169,7 +210,7 @@ class Footing extends StatelessWidget {
                                     "TOTAL VOLUME OF CONCRETE:",
                                     style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                Text("0.0"),
+                                Text(nvol.toStringAsFixed(2)),
                                 Text(
                                     "CU.M",
                                     style: TextStyle(fontWeight: FontWeight.bold),
