@@ -20,28 +20,11 @@ class _ConcreteState extends State<Concrete> {
     int selected = 0;
     int unit = 0;
 
-    double length = 100;
-    double width = 100;
-    double thickness = 10;
+    double length = 1;
+    double width = 1;
+    double thickness = 0.5;
     double number = 1;
 
-    double get volume {
-        return (length * width * thickness) * number;
-    }
-    double roundUp1(double value) {
-        return (value * 10).ceil() / 10;
-    }
-    double get cementBags {
-        return ( volume * 9 ).ceilToDouble();
-    }
-
-    double get volSand {
-        return roundUp1(volume * 0.5);
-    }
-
-    double get volGravel {
-        return roundUp1(volume * 1);
-    }
 
     Widget getPanel() {
         switch (selected) {
@@ -54,6 +37,7 @@ class _ConcreteState extends State<Concrete> {
                     thickness: thickness,
                     vol: vol,
                     nvol: nvol,
+                    number: number,
                     onLengthChanged: (value) {
                         setState(() {
                             length = value;
@@ -130,9 +114,8 @@ class _ConcreteState extends State<Concrete> {
                                                             "Unit Converter",
                                                             style: TextStyle(fontWeight:FontWeight.bold),
                                                         ),
-                                                        SizedBox(height: 30),
                                                         Divider(),
-                                                        SizedBox(width: 30,),
+                                                        SizedBox(width: 90,),
                                                         SizedBox(
                                                             height: 50,
                                                             width: 200,
@@ -144,6 +127,7 @@ class _ConcreteState extends State<Concrete> {
                                                                 ),
                                                                 filled: true,
                                                                 fillColor: Colors.white,
+                                                                
                                                             ),
                                                             items: [
                                                                 DropdownMenuItem(
@@ -222,7 +206,6 @@ class _ConcreteState extends State<Concrete> {
                 ]),
             appBar: AppBar(
                 toolbarHeight: 90,
-                title:const Text("Concreting"), 
                 backgroundColor: Colors.orangeAccent,
                 actions: [
                     SizedBox(
@@ -282,117 +265,7 @@ class _ConcreteState extends State<Concrete> {
                 ],),
             body: SingleChildScrollView(
                 child: Column(children: [
-                    IsometricBox(length: length, width: width, thickness: thickness),
                     getPanel(),
-                    Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        padding: const EdgeInsets.all(32),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black26,
-                                    blurRadius: 4,
-                                    offset: Offset(0, 4),
-                                ),
-                            ],
-                            border: Border.all(
-                                color: Colors.black26,
-                                width: 1,
-                            ),
-                            borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Column(children: [
-                            Container(
-                                padding: const EdgeInsets.all(10),
-                                margin: const EdgeInsets.only(bottom: 10),
-                                decoration: BoxDecoration(
-                                    color: Colors.orangeAccent,
-                                    border: Border.all(
-                                        color: Colors.brown,
-                                        width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                        SizedBox(
-                                            width: 200,
-                                            child: 
-                                            Text(
-                                                "NO. OF CEMENT:",
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                ),
-                                            ),
-                                        ),
-                                        Text(cementBags.toString(), style: TextStyle(fontWeight: FontWeight.bold)),
-                                        Text("BAGS"),
-                                    ]
-                                )
-                            ),
-                            Container(
-                                padding: const EdgeInsets.all(10),
-                                margin: const EdgeInsets.only(bottom: 10),
-                                decoration: BoxDecoration(
-                                    color: Colors.orangeAccent,
-                                    border: Border.all(
-                                        color: Colors.brown,
-                                        width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                        SizedBox(
-                                            width: 200,
-                                            child: 
-                                            Text(
-                                                "VOL. OF SAND:",
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                ),
-                                            ),
-                                        ),
-                                        Text(volSand.toString(), style: TextStyle(fontWeight: FontWeight.bold)),
-                                        Text("CU.M"),
-                                    ]
-                                )
-                            ),
-                            Container(
-                                padding: const EdgeInsets.all(10),
-                                margin: const EdgeInsets.only(bottom: 10),
-                                decoration: BoxDecoration(
-                                    color: Colors.orangeAccent,
-                                    border: Border.all(
-                                        color: Colors.brown,
-                                        width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                        SizedBox(
-                                            width: 200,
-                                            child: 
-                                            Text(
-                                                "VOL. OF 3/4\" GRAVEL:",
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                ),
-                                            ),
-                                        ),
-                                        Text(volGravel.toString(), style: TextStyle(fontWeight: FontWeight.bold)),
-                                        Text("CU.M"),
-                                    ]
-                                )
-                            ),
-                            SizedBox(height: 90,)
-                        ])
-                    )
                 ]),
             ),
         );

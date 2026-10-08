@@ -1,4 +1,6 @@
+import 'package:construct/widgets/visualization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class Footing extends StatelessWidget {
     final ValueChanged<double> onLengthChanged;
@@ -9,8 +11,27 @@ class Footing extends StatelessWidget {
     final double length;
     final double width;
     final double thickness;
+    final double number;
     final double vol;
     final double nvol;
+
+    double get volume {
+        return (length * width * thickness) * number;
+    }
+    double roundUp1(double value) {
+        return (value * 10).ceil() / 10;
+    }
+    double get cementBags {
+        return ( volume * 9 ).ceilToDouble();
+    }
+
+    double get volSand {
+        return roundUp1(volume * 0.5);
+    }
+
+    double get volGravel {
+        return roundUp1(volume * 1);
+    }
 
     const Footing({
         super.key,
@@ -21,6 +42,7 @@ class Footing extends StatelessWidget {
         required this.length,
         required this.width,
         required this.thickness,
+        required this.number,
         required this.vol,
         required this.nvol,
     });
@@ -29,9 +51,14 @@ class Footing extends StatelessWidget {
 
     @override
     Widget build(BuildContext context) {
+        final fLen = FocusNode();
+        final fWid = FocusNode();
+        final fThic = FocusNode();
+        final fNum = FocusNode();
+
         return Column(
             children: [
-                SizedBox(height: 30,),
+                IsometricBox(length: length, width: width, thickness: thickness),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -76,28 +103,28 @@ class Footing extends StatelessWidget {
                                     ]),
                                 Column(
                                     children: [
-                                        SizedBox(height: 40, child: Center(child: Text("L(M)", style: const TextStyle(fontWeight: FontWeight.bold)))),
-                                        SizedBox(height: 10),
-                                        SizedBox(height: 40, child: Center(child: Text("W(M)", style: const TextStyle(fontWeight: FontWeight.bold)))),
-                                        SizedBox(height: 10),
-                                        SizedBox(height: 40, child: Center(child: Text("T(M)", style: const TextStyle(fontWeight: FontWeight.bold)))),
-                                    ]),
-                                Column(
-                                    children: [
                                         SizedBox(
                                             width: text_Width, 
                                             height: 40, 
                                             child: TextField(
+                                                focusNode: fLen,
                                                 textAlign: TextAlign.center, 
                                                 textAlignVertical: TextAlignVertical.center,
+                                                keyboardType: const TextInputType.numberWithOptions(decimal: true), 
+                                                inputFormatters: [
+                                                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                                                ],
                                                 onChanged: (value) {
                                                     onLengthChanged(
                                                         double.tryParse(value) ?? 0,
                                                     );
                                                 },
+                                                onSubmitted: (_) {fWid.requestFocus();},
                                                 decoration: const InputDecoration(
                                                     contentPadding: EdgeInsets.zero,
-                                                    border: OutlineInputBorder()
+                                                    border: OutlineInputBorder(),
+                                                    hintText: 'L(M)',
+                                                    hintStyle: TextStyle(color: Colors.grey)
                                                 ),
                                             )
                                         ),
@@ -106,16 +133,24 @@ class Footing extends StatelessWidget {
                                             width: text_Width, 
                                             height: 40, 
                                             child: TextField(
+                                                focusNode: fWid,
                                                 textAlign: TextAlign.center, 
                                                 textAlignVertical: TextAlignVertical.center,
+                                                keyboardType: const TextInputType.numberWithOptions(decimal: true), 
+                                                inputFormatters: [
+                                                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                                                ],
                                                 onChanged: (value) {
                                                     onWidthChanged(
                                                         double.tryParse(value) ?? 0,
                                                     );
                                                 },
+                                                onSubmitted: (_) {fThic.requestFocus();},
                                                 decoration: const InputDecoration(
                                                     contentPadding: EdgeInsets.zero,
-                                                    border: OutlineInputBorder()
+                                                    border: OutlineInputBorder(),
+                                                    hintText: 'W(M)',
+                                                    hintStyle: TextStyle(color: Colors.grey)
                                                 ),
                                             )
                                         ),
@@ -124,16 +159,24 @@ class Footing extends StatelessWidget {
                                             width: text_Width, 
                                             height: 40, 
                                             child: TextField(
+                                                focusNode: fThic,
                                                 textAlign: TextAlign.center, 
                                                 textAlignVertical: TextAlignVertical.center,
+                                                keyboardType: const TextInputType.numberWithOptions(decimal: true), 
+                                                inputFormatters: [
+                                                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                                                ],
                                                 onChanged: (value) {
                                                     onThicknessChanged(
                                                         double.tryParse(value) ?? 0,
                                                     );
                                                 },
+                                                onSubmitted: (_) {fNum.requestFocus();},
                                                 decoration: const InputDecoration(
                                                     contentPadding: EdgeInsets.zero,
-                                                    border: OutlineInputBorder()
+                                                    border: OutlineInputBorder(),
+                                                    hintText: 'T(M)',
+                                                    hintStyle: TextStyle(color: Colors.grey)
                                                 ),
                                             )
                                         ),
@@ -148,7 +191,7 @@ class Footing extends StatelessWidget {
                                     ])
                             ],
                         ),
-                        SizedBox(height: 30),
+                        SizedBox(height: 50),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -156,13 +199,13 @@ class Footing extends StatelessWidget {
                                     "TOTAL VOLUME OF CONCRETE:",
                                     style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                Text(vol.toStringAsFixed(2)),
+                                Text(vol.toStringAsFixed(2), style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
                                 Text(
                                     "CU.M",
                                     style: TextStyle(fontWeight: FontWeight.bold),
                                 )
                             ]),
-                        SizedBox(height: 30),
+                        SizedBox(height: 50),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -172,16 +215,17 @@ class Footing extends StatelessWidget {
                                     ]),
                                 Column(
                                     children: [
-                                        SizedBox(height: 40, child: Center(child: Text("Units", style: const TextStyle(fontWeight: FontWeight.bold)))),
-                                    ]),
-                                Column(
-                                    children: [
                                         SizedBox(
                                             width: text_Width, 
                                             height: 40, 
                                             child: TextField(
+                                                focusNode: fNum,
                                                 textAlign: TextAlign.center, 
                                                 textAlignVertical: TextAlignVertical.center,
+                                                keyboardType: TextInputType.number, 
+                                                inputFormatters: [
+                                                    FilteringTextInputFormatter.digitsOnly,
+                                                ],
                                                 onChanged: (value) {
                                                     onNumberChanged(
                                                         double.tryParse(value) ?? 0,
@@ -189,7 +233,10 @@ class Footing extends StatelessWidget {
                                                 },
                                                 decoration: const InputDecoration(
                                                     contentPadding: EdgeInsets.zero,
-                                                    border: OutlineInputBorder()
+                                                    border: OutlineInputBorder(),
+                                                    hintText: 'amount',
+                                                    hintStyle: TextStyle(color: Colors.grey)
+
                                                 ),
                                             )
                                         ),
@@ -210,13 +257,122 @@ class Footing extends StatelessWidget {
                                     "TOTAL VOLUME OF CONCRETE:",
                                     style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                Text(nvol.toStringAsFixed(2)),
+                                Text(nvol.toStringAsFixed(2), style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
                                 Text(
                                     "CU.M",
                                     style: TextStyle(fontWeight: FontWeight.bold),
                                 )
                             ]),
                     ]),
+                ),
+                Container(
+                    margin: const EdgeInsets.only(left: 10, right: 10),
+                    padding: const EdgeInsets.all(32),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                            BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 4,
+                                offset: Offset(0, 4),
+                            ),
+                        ],
+                        border: Border.all(
+                            color: Colors.black26,
+                            width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Column(children: [
+                        Container(
+                            padding: const EdgeInsets.all(10),
+                            margin: const EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                                color: Colors.orangeAccent,
+                                border: Border.all(
+                                    color: Colors.brown,
+                                    width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                    SizedBox(
+                                        width: 200,
+                                        child: 
+                                        Text(
+                                            "NO. OF CEMENT:",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                            ),
+                                        ),
+                                    ),
+                                    Text(cementBags.toString(), style: TextStyle(fontWeight: FontWeight.bold)),
+                                    Text("BAGS"),
+                                ]
+                            )
+                        ),
+                        Container(
+                            padding: const EdgeInsets.all(10),
+                            margin: const EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                                color: Colors.orangeAccent,
+                                border: Border.all(
+                                    color: Colors.brown,
+                                    width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                    SizedBox(
+                                        width: 200,
+                                        child: 
+                                        Text(
+                                            "VOL. OF SAND:",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                            ),
+                                        ),
+                                    ),
+                                    Text(volSand.toString(), style: TextStyle(fontWeight: FontWeight.bold)),
+                                    Text("CU.M"),
+                                ]
+                            )
+                        ),
+                        Container(
+                            padding: const EdgeInsets.all(10),
+                            margin: const EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                                color: Colors.orangeAccent,
+                                border: Border.all(
+                                    color: Colors.brown,
+                                    width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                    SizedBox(
+                                        width: 200,
+                                        child: 
+                                        Text(
+                                            "VOL. OF 3/4\" GRAVEL:",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                            ),
+                                        ),
+                                    ),
+                                    Text(volGravel.toString(), style: TextStyle(fontWeight: FontWeight.bold)),
+                                    Text("CU.M"),
+                                ]
+                            )
+                        ),
+                        SizedBox(height: 90,)
+                    ])
                 )
             ],
         );
