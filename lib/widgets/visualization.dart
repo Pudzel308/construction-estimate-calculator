@@ -192,7 +192,7 @@ class IsometricBoxPainter extends CustomPainter {
             p5,
             p6,
             offset: 25,
-            label: '${_formatNumber(l)} m (L)',
+            label: '${_formatNumber(w)} m (L)',
         );
 
         _drawWidthDimension(
@@ -200,7 +200,7 @@ class IsometricBoxPainter extends CustomPainter {
             p3,
             p2,
             offset: 15,
-            label: '${_formatNumber(w)} m (W)',
+            label: '${_formatNumber(l)} m (W)',
         );
 
         _drawThicknessDimension(

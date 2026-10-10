@@ -2,12 +2,9 @@ import 'package:construct/widgets/concreting/floor_slab.dart';
 import 'package:construct/widgets/concreting/floor_slab_area.dart';
 import 'package:construct/widgets/concreting/footing.dart';
 import 'package:construct/widgets/concreting/wall_footing.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_calculator/in_app_calculator.dart';
-import 'package:units_converter/units_converter.dart';
-import 'package:construct/widgets/visualization.dart';
-import 'dart:math' as math;
+import 'package:construct/widgets/units_converter.dart';
 
 class Concrete extends StatefulWidget{
     const Concrete({super.key});
@@ -18,13 +15,11 @@ class Concrete extends StatefulWidget{
 
 class _ConcreteState extends State<Concrete> {
     int selected = 0;
-    int unit = 0;
 
     double length = 1;
     double width = 1;
     double thickness = 0.5;
     double number = 1;
-
 
     Widget getPanel() {
         switch (selected) {
@@ -60,7 +55,36 @@ class _ConcreteState extends State<Concrete> {
                     },
                 );
             case 1:
-                return const WallFooting();
+                final double vol = length * width * thickness;
+                final double nvol = vol * number;
+                return WallFooting(
+                    length: length,
+                    width: width,
+                    thickness: thickness,
+                    vol: vol,
+                    nvol: nvol,
+                    number: number,
+                    onLengthChanged: (value) {
+                        setState(() {
+                            length = value;
+                        });
+                    },
+                    onWidthChanged: (value) {
+                        setState(() {
+                            width = value;
+                        });
+                    },
+                    onThicknessChanged: (value) {
+                        setState(() {
+                            thickness = value;
+                        });
+                    },
+                    onNumberChanged: (value) {
+                        setState(() {
+                            number = value;
+                        });
+                    },
+                );
             case 2:
                 return const FloorSlab();
             case 3:
@@ -101,108 +125,25 @@ class _ConcreteState extends State<Concrete> {
                             showDialog(
                                 context: context, 
                                 builder: (context) {
-                                    return Dialog(
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                        backgroundColor: Colors.white,
-                                        child: Padding(
-                                            padding: const EdgeInsets.all(32),
-                                            child: SizedBox(
-                                                height: 300,
-                                                child: Column(
-                                                    children: [
-                                                        Text(
-                                                            "Unit Converter",
-                                                            style: TextStyle(fontWeight:FontWeight.bold),
-                                                        ),
-                                                        Divider(),
-                                                        SizedBox(width: 90,),
-                                                        SizedBox(
-                                                            height: 50,
-                                                            width: 200,
-                                                            child: DropdownButtonFormField<int>(
-                                                            initialValue: unit,
-                                                            decoration: InputDecoration(
-                                                                border: OutlineInputBorder(
-                                                                    borderRadius: BorderRadius.circular(4),
-                                                                ),
-                                                                filled: true,
-                                                                fillColor: Colors.white,
-                                                                
-                                                            ),
-                                                            items: [
-                                                                DropdownMenuItem(
-                                                                    value: 0,
-                                                                    child: Text("Length")
-                                                                ),
-                                                                DropdownMenuItem(
-                                                                    value: 1,
-                                                                    child: Text("Area")
-                                                                ),
-                                                                DropdownMenuItem(
-                                                                    value: 2,
-                                                                    child: Text("Volume")
-                                                                ),
-                                                                DropdownMenuItem(
-                                                                    value: 3,
-                                                                    child: Text("Mass")
-                                                                ),
-                                                            ], 
-                                                            onChanged: (value) {
-                                                                setState(() {
-                                                                    unit = value!;
-                                                                });
-                                                            }
-                                                        ),
-                                                        ),
-                                                        SizedBox(height: 50,),
-                                                        Container(
-                                                            height: 40,
-                                                            padding: const EdgeInsets.all(6),
-                                                            margin: const EdgeInsets.only(bottom: 10),
-                                                            decoration: BoxDecoration(
-                                                                border: Border.all(
-                                                                    color: Colors.brown,
-                                                                    width: 1,
-                                                                ),
-                                                                borderRadius: BorderRadius.circular(6),
-                                                            ),
-                                                            child: Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                                children: [
-                                                                    Text("From:"),
-                                                                    SizedBox(width: 100,child: TextField()),
-                                                                    Text("Meters")
-                                                                ])
-                                                        ),
-                                                        SizedBox(height: 20,),
-                                                        Container(
-                                                            height: 40,
-                                                            padding: const EdgeInsets.all(6),
-                                                            margin: const EdgeInsets.only(bottom: 10),
-                                                            decoration: BoxDecoration(
-                                                                border: Border.all(
-                                                                    color: Colors.brown,
-                                                                    width: 1,
-                                                                ),
-                                                                borderRadius: BorderRadius.circular(6),
-                                                            ),
-                                                            child: Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                                children: [
-                                                                    Text("To:"),
-                                                                    SizedBox(width: 100,child: TextField()),
-                                                                    Text("Feet")
-                                                                ])
-                                                        ),
-                                                    ]
-                                                ),
-                                            )
-                                        ),
+                                    return SizedBox(child: 
+                                        Dialog(
+                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                            backgroundColor: Colors.white,
+                                            child: Padding(
+                                                padding: const EdgeInsets.all(32),
+                                                child: SizedBox(
+                                                    height: 300,
+                                                    child: UnitsConverter(),
+                                                )
+                                            ),
+                                        )
                                     );
+
                                 }
                             );
                         }, 
-                        child: Icon(Icons.percent),)
+                        child: Icon(Icons.percent),
+                    )
                 ]),
             appBar: AppBar(
                 toolbarHeight: 90,

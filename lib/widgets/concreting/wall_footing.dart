@@ -1,16 +1,69 @@
+import 'package:construct/widgets/num_field.dart';
+import 'package:construct/widgets/visualization.dart';
 import 'package:flutter/material.dart';
 
-class WallFooting extends StatelessWidget {
-    const WallFooting({super.key});
+class WallFooting extends StatefulWidget {
+    final ValueChanged<double> onLengthChanged;
+    final ValueChanged<double> onWidthChanged;
+    final ValueChanged<double> onThicknessChanged;
+    final ValueChanged<double> onNumberChanged;
 
-    final double text_Width = 100;
+    final double length;
+    final double width;
+    final double thickness;
+    final double number;
+    final double vol;
+    final double nvol;
+
+    const WallFooting({
+        super.key,
+        required this.onLengthChanged,
+        required this.onWidthChanged,
+        required this.onThicknessChanged,
+        required this.onNumberChanged,
+        required this.length,
+        required this.width,
+        required this.thickness,
+        required this.number,
+        required this.vol,
+        required this.nvol,
+
+    });
+
+    @override
+    State<WallFooting> createState() => _WallFootingState();
+}
+
+class _WallFootingState extends State<WallFooting> {
+    final fLen = FocusNode();
+    final fWid = FocusNode();
+    final fThic = FocusNode();
+
+    double get volume {
+        return (widget.length * widget.width * widget.thickness) * widget.number;
+    }
+    double roundUp1(double value) {
+        return (value * 10).ceil() / 10;
+    }
+    double get cementBags {
+        return ( volume * 9 ).ceilToDouble();
+    }
+
+    double get volSand {
+        return roundUp1(volume * 0.5);
+    }
+
+    double get volGravel {
+        return roundUp1(volume * 1);
+    }
+
+    final double textwidth = 100;
 
     @override
     Widget build(BuildContext context) {
         return Column(
             children: [
-                Divider(),
-                SizedBox(height: 30,),
+                IsometricBox(length: widget.length, width: widget.width, thickness: widget.thickness),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -22,113 +75,79 @@ class WallFooting extends StatelessWidget {
                                 fontSize: 18
                             ),
                         )
-                    ],),
-                Container(
-                    margin: const EdgeInsets.only(left: 10, right: 10, top: 30, bottom: 30),
-                    padding: const EdgeInsets.all(32),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                            BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 4,
-                                offset: Offset(0, 4),
-                            ),
-                        ],
-                        border: Border.all(
-                            color: Colors.black26,
-                            width: 1,
-                        ),
-                        borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Column(children: [
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                                Column(
-                                    children: [
-                                        SizedBox(height: 40, child: Center(child: Text("Length: "))),
-                                        SizedBox(height: 10),
-                                        SizedBox(height: 40, child: Center(child: Text("Width: "))),
-                                        SizedBox(height: 10),
-                                        SizedBox(height: 40, child: Center(child: Text("Thickness: "))),
-                                    ]),
-                                Column(
-                                    children: [
-                                        SizedBox(height: 40, child: Center(child: Text("LT(M)", style: const TextStyle(fontWeight: FontWeight.bold)))),
-                                        SizedBox(height: 10),
-                                        SizedBox(height: 40, child: Center(child: Text("W(M)", style: const TextStyle(fontWeight: FontWeight.bold)))),
-                                        SizedBox(height: 10),
-                                        SizedBox(height: 40, child: Center(child: Text("T(M)", style: const TextStyle(fontWeight: FontWeight.bold)))),
-                                    ]),
-                                Column(
-                                    children: [
-                                        SizedBox(
-                                            width: text_Width, 
-                                            height: 40, 
-                                            child: TextField(
-                                                textAlign: TextAlign.center, 
-                                                textAlignVertical: TextAlignVertical.center,
-                                                decoration: const InputDecoration(
-                                                    contentPadding: EdgeInsets.zero,
-                                                    border: OutlineInputBorder()
-                                                ),
-                                            )
-                                        ),
-                                        SizedBox(height: 10),
-                                        SizedBox(
-                                            width: text_Width, 
-                                            height: 40, 
-                                            child: TextField(
-                                                textAlign: TextAlign.center, 
-                                                textAlignVertical: TextAlignVertical.center,
-                                                decoration: const InputDecoration(
-                                                    contentPadding: EdgeInsets.zero,
-                                                    border: OutlineInputBorder()
-                                                ),
-                                            )
-                                        ),
-                                        SizedBox(height: 10),
-                                        SizedBox(
-                                            width: text_Width, 
-                                            height: 40, 
-                                            child: TextField(
-                                                textAlign: TextAlign.center, 
-                                                textAlignVertical: TextAlignVertical.center,
-                                                decoration: const InputDecoration(
-                                                    contentPadding: EdgeInsets.zero,
-                                                    border: OutlineInputBorder()
-                                                ),
-                                            )
-                                        ),
-                                    ]),
-                                Column(
-                                    children: [
-                                        SizedBox(height: 40, child: Center(child: Text("M", style: const TextStyle(fontWeight: FontWeight.bold)))),
-                                        SizedBox(height: 10),
-                                        SizedBox(height: 40, child: Center(child: Text("M", style: const TextStyle(fontWeight: FontWeight.bold)))),
-                                        SizedBox(height: 10),
-                                        SizedBox(height: 40, child: Center(child: Text("M", style: const TextStyle(fontWeight: FontWeight.bold)))),
-                                    ])
-                            ],
-                        ),
-                        SizedBox(height: 30),
-                        Divider(),
-                        SizedBox(height: 30),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                                Text(
-                                    "TOTAL VOLUME OF CONCRETE:",
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                    ],
+                ),
+                SizedBox(height: 20),
+                Text('Lt = Total Length Perimeter'),
+                StandardContainer(child: Column(children: [
+                    Table(
+                        columnWidths: {2: FixedColumnWidth(80)},
+                        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                        children: [
+                            TableRow(children: [
+                                Text('Length:'),
+                                NumField(
+                                    width: textwidth,
+                                    focusNode: fLen,
+                                    onSubmitted: (_) {fWid.requestFocus();},
+                                    onChanged: (value) {
+                                        widget.onWidthChanged(double.tryParse(value) ?? 0);
+                                    },
+                                    hint: 'Lt(m)',
                                 ),
-                                Text("0.0"),
-                                Text(
-                                    "CU.M",
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                )
+                                Unit(text: 'm')
                             ]),
-                    ]),
+                            cellSeparator(10),
+                            TableRow(children: [
+                                Text('Width:'),
+                                NumField(
+                                    width: textwidth,
+                                    focusNode: fWid,
+                                    onSubmitted: (_) {fThic.requestFocus();},
+                                    onChanged: (value) {
+                                        widget.onWidthChanged(double.tryParse(value) ?? 0);
+                                    },
+                                    hint: 'W(m)',
+                                ),
+                                Unit(text: 'm')
+                            ]),
+                            cellSeparator(10),
+                            TableRow(children: [
+                                Text('Thickness:'),
+                                NumField(
+                                    width: textwidth,
+                                    focusNode: fThic,
+                                    onSubmitted: (_) {fThic.unfocus();},
+                                    onChanged: (value) {
+                                        widget.onWidthChanged(double.tryParse(value) ?? 0);
+                                    },
+                                    hint: 'T(m)',
+                                ),
+                                Unit(text: 'm')
+                            ])
+                        ],
+                    ),
+                    SizedBox(height: 30),
+                    Divider(),
+                    SizedBox(height: 30),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                            Unit(text: "TOTAL VOLUME OF CONCRETE:"),
+                            Text(widget.nvol.toStringAsFixed(2), style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
+                            Unit(text: "CU.M")
+                        ]
+                    ),
+
+                ],)
+                ),
+                StandardContainer(
+                    child: Column(children: [
+                        InfoRow(firstColumn: 'NO. OF CEMENT:', secondColumn: cementBags.toString(), thirdColumn: 'BAGS'),
+                        InfoRow(firstColumn: 'VOL. OF SAND:', secondColumn: volSand.toString(), thirdColumn: 'CU.M'),
+                        InfoRow(firstColumn: 'VOL. OF 3/4" GRAVEL:', secondColumn: volGravel.toString(), thirdColumn: 'CU.M'),
+                        SizedBox(height: 90,)
+                    ])
                 )
             ],
         );
